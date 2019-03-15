@@ -11,7 +11,7 @@ export default StyleSheet.create({
     body: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: hp('%'),
+        paddingVertical: hp('2%'),
         // backgroundColor: platform.brandLight,
     },
     bodyStyle:{

@@ -8,6 +8,7 @@ export default StyleSheet.create({
     topPane:{
         height:hp('40%'),
         justifyContent: 'center',
+        marginHorizontal: wp('5%'),
         alignItems: 'center',
     },
     container: {
@@ -18,6 +19,12 @@ export default StyleSheet.create({
             bottom: 0,
         justifyContent: 'flex-end',
         alignItems: 'center',
+    },
+    desc:{
+        color: '#444',
+        fontSize: 13,
+        marginVertical: hp('1%'), 
+        marginHorizontal: wp('1%')
     },
     map: {
         // position: 'absolute',

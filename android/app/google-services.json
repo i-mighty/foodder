@@ -5,38 +5,52 @@
     "project_id": "foodder-sys",
     "storage_bucket": "foodder-sys.appspot.com"
   },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:575984745190:android:d8712fe716e0823b",
-        "android_client_info": {
-          "package_name": "com.foodder"
+  "client": [{
+    "client_info": {
+      "mobilesdk_app_id": "1:575984745190:android:d8712fe716e0823b",
+      "android_client_info": {
+        "package_name": "com.foodder"
+      }
+    },
+    "oauth_client": [{
+        "client_id": "575984745190-24taumr8e9d5q6tovr054h5qfmpovvh3.apps.googleusercontent.com",
+        "client_type": 1,
+        "android_info": {
+          "package_name": "com.foodder",
+          "certificate_hash": "589fea5c3316c33fa2934542729ad58a0d7dd9b1"
         }
       },
-      "oauth_client": [
-        {
+      {
+        "client_id": "575984745190-07s6h9qa36rc4ikkvumr6bef8rt65o3r.apps.googleusercontent.com",
+        "client_type": 1,
+        "android_info": {
+          "package_name": "com.foodder",
+          "certificate_hash": "cc9f53a4da86acf0091f5fc65a655608e0a5798d"
+        }
+      },
+      {
+        "client_id": "575984745190-bgr03cfktl92r6ki4a1c0f7s747epap1.apps.googleusercontent.com",
+        "client_type": 3
+      }
+    ],
+    "api_key": [{
+      "current_key": "AIzaSyCMoyc7Bz70FEq4bDecucFe5MorgQuHMnQ"
+    }],
+    "services": {
+      "analytics_service": {
+        "status": 1
+      },
+      "appinvite_service": {
+        "status": 2,
+        "other_platform_oauth_client": [{
           "client_id": "575984745190-bgr03cfktl92r6ki4a1c0f7s747epap1.apps.googleusercontent.com",
           "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCMoyc7Bz70FEq4bDecucFe5MorgQuHMnQ"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
+        }]
+      },
+      "ads_service": {
+        "status": 2
       }
     }
-  ],
+  }],
   "configuration_version": "1"
 }

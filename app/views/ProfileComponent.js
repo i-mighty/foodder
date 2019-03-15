@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Text as RNText} from 'react-native';
-import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem} from 'native-base'
+import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem, View} from 'native-base'
 import * as Animatable from 'react-native-animatable';
-import { withNavigation } from 'react-navigation';
+import { withNavigationFocus } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {saveUser} from '../data/Actions';
@@ -20,9 +20,9 @@ class ProfileComponent extends Component {
 
     render() {
         return (
-                this.props.navigation.isFocused &&
-            <StyleProvider style={getTheme(platform)}>
-                <AnimatableContainer animation='fadeIn'>
+            this.props.isFocused &&
+            <AnimatableContainer animation='fadeIn'>
+                <StyleProvider style={getTheme(platform)}>
                     <Header searchBar>
                         <Body>
                             <Title>
@@ -35,24 +35,26 @@ class ProfileComponent extends Component {
                             </Button>
                         </Right>
                     </Header>
+                </StyleProvider>
+                <StyleProvider style={getTheme(platform)}>
                     <Content>
                         <Col style={styles.userPane}>
                             <Avatar
-                                size="xlarge"
+                                size="large"
                                 source={{
                                     uri: ''
                                 }}
-                                editButton={<RNEIcon name='camera'/>}
+                                editButton={<Icon name='camera'/>}
                                 title="MD"
                                 rounded
                                 showEditButton
                                 avatarStyle={styles.userPaneItems}
                             />   
                             <H1 style={styles.userPaneItems}>
-                                Display Name
+                                {this.props.user.name}
                             </H1>
                             <H3 style={styles.userPaneItems}>
-                                Phone Number
+                                {this.props.user.phoneNumber}
                             </H3>                         
                         </Col>
                         <List>
@@ -119,8 +121,8 @@ class ProfileComponent extends Component {
                             </ListItem>
                         </List>
                     </Content>
-                </AnimatableContainer>
-            </StyleProvider>
+                </StyleProvider>
+            </AnimatableContainer>
         );
     }
 }
@@ -132,5 +134,4 @@ const mapDispatchToProps = dispatch => (
         saveUser
     }, dispatch)
 );
-const view = withNavigation(ProfileComponent);
-export default connect(mapStateToProps, mapDispatchToProps)(view);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigationFocus(ProfileComponent));

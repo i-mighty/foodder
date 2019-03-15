@@ -3,13 +3,15 @@ package com.foodder;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.rnfs.RNFSPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import org.wonday.orientation.OrientationPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -30,12 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
+            new RNFSPackage(),
+            new RNFetchBlobPackage(),
             new OrientationPackage(),
             new RNGestureHandlerPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAuthPackage(),
             new RNFirebaseDatabasePackage(),
-            new RNFetchBlobPackage(),
             new MapsPackage()
       );
     }

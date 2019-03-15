@@ -33,6 +33,15 @@ export default {
   badgeColor: "#fff",
   badgePadding: platform === "ios" ? 3 : 0,
 
+  getpaperColor(){
+    return {
+      primary: this.brandPrimary,
+      text: this.brandDark,
+      accent: this.brandPrimary,
+      placeholder: this.brandLight,
+      background: '#fff'
+    }
+  },
   // Button
   btnFontFamily: platform === "ios" ? "System" : "Roboto_medium",
   btnDisabledBg: "#b5b5b5",

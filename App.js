@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform} from 'react-native'
 import { Root, Footer, FooterTab, Text, Icon, Button } from 'native-base';
 import { createSwitchNavigator, createAppContainer, createBottomTabNavigator } from "react-navigation";
 import { Provider } from 'react-redux';
@@ -8,14 +8,19 @@ import {store, persistor} from './app/data/index';
 import platform from './app/native-base-theme/variables/platform';
 import LoginComponent from './app/views/LoginComponent'
 import SearchComponent from './app/views/SearchComponent';
-import HomeComponent from './app/views/HomeComponent'
+import HomeComponent from './app/views/HomeComponent';
+import AdminHome from './app/views/AdminComponents/HomeComponents'
 import ProfileComponent from './app/views/ProfileComponent'
 import PlacesComponent from './app/views/PlacesComponent';
 import PlaceComponent from './app/views/PlaceComponent'
 import OrderComponent from './app/views/OrderComponent';
 import ItemComponent from './app/views/ItemComponent'
+import AddItems from './app/views/AdminComponents/AddItemComponent';
 import Orientation from 'react-native-orientation-locker';
 import SettingsComponent from './app/views/SettingsComponent';
+import ActiveOrders from './app/views/AdminComponents/ActiveOrdersComponent';
+import CustomersComponent from './app/views/AdminComponents/CustomersComponent'
+import AdminAuth from './app/views/AdminComponents/AdminAuth';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 // CODE SYNC API TOKEN: e7bbac4a9730947730e67aed1ca605a586c12be9
@@ -90,7 +95,7 @@ const AppStack = createBottomTabNavigator({
     }
   },
 }, {
-  initialRouteName:'Search',
+  initialRouteName:'Home',
   tabBarOptions:{
     activeTintColor: platform.brandDark,
     inactiveTintColor: '#eee',
@@ -98,18 +103,29 @@ const AppStack = createBottomTabNavigator({
       backgroundColor: platform.brandLight,
       paddingVertical: heightPercentageToDP('1%')
     }
-  }
+  },
 });
 
+const AuthStack = createSwitchNavigator({
+  Login:{
+    screen: LoginComponent,
+  },
+  Admin:{
+    screen: AdminAuth
+  }
+}, {
+  initialRouteName: 'Admin'
+})
+
 const RootStack = createSwitchNavigator({
-  Login: {
-    screen: PlaceComponent
+  Auth: {
+    screen: AuthStack
   },
   App:{
     screen: AppStack
   }
 }, {
-  initialRouteName: 'Login'
+  initialRouteName: 'Auth'
 })
 
 const AppContainer = createAppContainer(RootStack)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, PlatformOSType } from 'react-native';
+import {ImageBackground, Platform } from 'react-native';
 import {Container, Content, Header, Form, Item, Input, Text, Icon, Button, Toast, Left} from 'native-base'
 import CodeInput from 'react-native-confirmation-code-input';
 import platform from '../native-base-theme/variables/platform';
@@ -51,7 +51,7 @@ class LoginView extends Component {
         return (
             <Content>
                 <ImageBackground source={require('../assets/loginBG.png')} style={styles.bgImage}>
-                    <Header style={styles.header} androidStatusBarColor={config.statusBar} transparent>
+                    <Header style={styles.header} androidStatusBarColor={'#fff'} transparent>
 
                     </Header>
                 </ImageBackground>
@@ -73,6 +73,11 @@ class LoginView extends Component {
                             Continue
                         </Text>
                     </Button>
+                    <Button transparent block style={styles.input} onPress={() => this.navigate('Admin')}>
+                        <Text>
+                            Sign in as restaurant admin
+                        </Text>
+                    </Button>
                 </Form>
                 <Dialog.Container 
                     visible={this.state.verfDialog}
@@ -81,7 +86,8 @@ class LoginView extends Component {
                         Verify Your Phone Number
                     </Dialog.Title>
                     <Dialog.Description>
-                        Enter the verification code sent by Google to your phone
+                        Enter the verification code sent by Google to your phone.
+                        {Platform.OS === 'android'?'\nWe are waiting to auto detect a message sent to your phone':''}
                     </Dialog.Description>
                     <Dialog.Input 
                         placeholder='Verification code' 
@@ -169,7 +175,7 @@ class LoginView extends Component {
 
     authCompleteProceed(user){
         var val;
-        if (this.props.user.phoneNumber === '' && !this.state.phoneNumber === '') {
+        if (!this.props.user.name === '' && !this.state.phoneNumber === '') {
             val = {
                 name: this.state.name,
                 phoneNumber: this.state.fixedNo,

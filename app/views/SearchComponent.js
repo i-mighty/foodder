@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Image from 'react-native-image-progress';
+import {withNavigationFocus} from 'react-navigation';
 import {Container, Content, Footer, FooterTab, Header, StyleProvider, Text, Button, Icon, Item, Input, Spinner, List, View, Card, CardItem, Left, Body, Right, Badge} from 'native-base'
 import * as Animatable from 'react-native-animatable';
 import Display from 'react-native-display';
@@ -56,15 +57,16 @@ class SearchComponent extends Component {
 
     render() {
         return (
-                this.props.navigation.isFocused &&
-            <StyleProvider style={getTheme(platform)}>
-                <AnimatableContainer animation='fadeIn'>
-                    <Header searchBar>
-                        <Item>
-                            <Icon name='search'/>
-                            <Input placeholder='Search' onChangeText={(text) => this.setState({searchText: text})}/>
-                        </Item>
-                    </Header>
+                    this.props.isFocused &&
+                <AnimatableContainer animation='fadeIn' ref={(ref) =>  this.animation = ref}>
+                    <StyleProvider style={getTheme(platform)} >
+                        <Header searchBar>
+                            <Item>
+                                <Icon name='search'/>
+                                <Input placeholder='Search' onChangeText={(text) => this.setState({searchText: text})}/>
+                            </Item>
+                        </Header>
+                    </StyleProvider>
                     <Content contentContainerStyle={styles.body} style={styles.bodyStyle}>
                         <Display enable={this.state.searchText.length === 0}>
                             <SectionLabel text="Your past searches"/>
@@ -109,7 +111,6 @@ class SearchComponent extends Component {
                         </Display>
                     </Content>
                 </AnimatableContainer>
-            </StyleProvider>
         );
     }
 
@@ -184,4 +185,5 @@ const mapDispatchToProps = dispatch => (
         saveUser
     }, dispatch)
 );
-export default connect(mapStateToProps, mapDispatchToProps)(SearchComponent);
+const view = withNavigationFocus(SearchComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(view);

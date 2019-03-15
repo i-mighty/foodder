@@ -9,14 +9,31 @@ import styles from '../styles/PlaceStyle'
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import GreenIcon from './SubComponents/GreenIcon';
+import ViewMoreText from 'react-native-view-more-text';
+import Dialog from "react-native-dialog";
 
 class PlaceView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             menu:[],
-            followers: []
+            followers: [],
+            directionDialog: false
         };
+    }
+
+    renderViewMore(onPress){
+        return(
+            <Text style={{color: platform.brandLight, fontSize: 12,}}
+            onPress={onPress}>More</Text>
+        )
+    }
+
+    renderViewLess(onPress){
+        return(
+            <Text style={{color: platform.brandDanger, fontSize: 12,}}
+            onPress={onPress}>Less</Text>
+        )
     }
 
     render() {
@@ -32,22 +49,28 @@ class PlaceView extends Component {
                                     containerStyle={styles.avatar}
                                 />
                                 <Badge
-                                    status='success'
-                                    value={<Text style={styles.badgeText}>Open</Text>}
+                                    status='error'
+                                    value={<Text style={styles.badgeText}>Closed</Text>}
                                     badgeStyle={styles.badgeContainer}
                                 />
                             <H1 style={{marginVertical: heightPercentageToDP('1%'), marginHorizontal: heightPercentageToDP('1%')}}>
                                 The Restaurant Name
                             </H1>
-                            <Text style={{marginVertical: heightPercentageToDP('1%'), marginHorizontal: heightPercentageToDP('1%')}} numberOfLines={2}>
-                                A very lengthy description of the restaurant in question so that the user can have a brief understanding of what to expect should they find themselves there.
-                            </Text>
+                            <ViewMoreText
+                                numberOfLines={1}
+                                renderViewMore={this.renderViewMore}
+                                renderViewLess={this.renderViewLess}
+                            >
+                                <Text style={styles.desc}>
+                                    A very lengthy description of the restaurant in question so that the user can have a brief understanding of what to expect should they find themselves there.
+                                </Text>
+                            </ViewMoreText>
                         </View>
                         <Tabs>
                             <Tab heading={
                                 <TabHeading>
                                     <Icon name='information-circle'/>
-                                    <Text>Infos</Text>
+                                    <Text>Info</Text>
                                 </TabHeading>
                             }>
                                 <List>
@@ -139,6 +162,14 @@ class PlaceView extends Component {
                                 </MapView>
                             </Tab>
                         </Tabs>
+                        <Dialog.Container visible={this.state.directionDialog}>
+                            <Dialog.Title>Get Directions?</Dialog.Title>
+                            <Dialog.Description>
+                                Would you like to get directions from your current location
+                            </Dialog.Description>
+                            <Dialog.Button label="Cancel" />
+                            <Dialog.Button label="Okay" />
+                        </Dialog.Container>
                     </Content>
                 </Container>
             </StyleProvider>

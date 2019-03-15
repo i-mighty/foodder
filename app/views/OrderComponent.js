@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ListView } from 'react-native';
 import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, List, ListItem, Thumbnail} from 'native-base'
 import * as Animatable from 'react-native-animatable';
-import { withNavigation } from 'react-navigation';
+import { withNavigationFocus } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {saveUser} from '../data/Actions';
@@ -77,7 +77,7 @@ class OrderComponent extends Component {
                                 </Left>
                                 <Body>
                                     <Text> {data} </Text>
-                                    <Text note numberOfLines={2}>This is a sample text that I am trying to make as long as possible so as to be able to test the text overflow of react Native. Now we are making it a bit longer to see how it would hold up with three lines</Text>
+                                    <Text note numberOfLines={2}>{data}</Text>
                                 </Body>
                                 <Right>
                                     <Button transparent>
@@ -108,5 +108,5 @@ const mapDispatchToProps = dispatch => (
         saveUser
     }, dispatch)
 );
-const view = withNavigation(OrderComponent);
+const view = withNavigationFocus(OrderComponent);
 export default connect(mapStateToProps, mapDispatchToProps)(view);

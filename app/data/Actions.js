@@ -3,7 +3,7 @@ export const saveUser = user => ({
     payload: user
 });
 
-export const saveAdmin = admin => ({
-    type: 'SAVE_ADMIN',
-    payload: admin
+export const deleteUser = user => ({
+    type: 'DELETE_USER',
+    payload: {}
 });
