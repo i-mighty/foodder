@@ -3,6 +3,7 @@ import { View, ListView, LayoutAnimation } from 'react-native';
 import { Container, Header, Body, Title, Content, List, ListItem, Left, Thumbnail, Text, Right, Button, Icon, Switch, Row, Fab, StyleProvider, Toast } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
+import {withNavigationFocus} from 'react-navigation'
 import {bindActionCreators} from 'redux';
 import {saveUser} from '../../data/Actions';
 import getTheme from '../../native-base-theme/components';

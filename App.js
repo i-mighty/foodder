@@ -213,7 +213,7 @@ const AdminNav = createDrawerNavigator({
         screen: AdminEditProfile,
     }
 }, {
-    initialRouteName: 'Restaurant',
+    initialRouteName: 'ActiveOrders',
     contentComponent: props => <SideBar {...props}/>
 });
 
