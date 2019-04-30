@@ -3,7 +3,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen';
-
+import platform from '../native-base-theme/variables/platform';
 export default StyleSheet.create({
     topPane:{
         height:hp('40%'),
@@ -37,11 +37,39 @@ export default StyleSheet.create({
     badgeText:{
         color: '#fff'
     },
+    tab:{
+        height: hp('50%')
+    },
     badgeContainer:{
         paddingVertical: wp('1%'),
         paddingHorizontal: wp('2'),
     },
     avatar:{
         marginVertical: hp('1%'),
-    }
+        borderWidth: 1,
+        borderColor: platform.brandPrimary
+    },
+    noFollowersIcon:{
+        fontSize: wp('20%'),
+        color: '#AAA7'
+    },
+    noFollowersView:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        height: hp('50')
+    },
+    noMenuView:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        height: hp('50')
+    },
+    noFollowersText:{
+        fontSize: wp('5%'),
+        color: '#AAA7',
+        marginVertical: hp('1%')
+    },
 });

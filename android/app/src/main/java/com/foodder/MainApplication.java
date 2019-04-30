@@ -12,10 +12,13 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage; // <-- Add this line
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +39,13 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFSPackage(),
             new RNFetchBlobPackage(),
             new OrientationPackage(),
+            new RNFusedLocationPackage(),
             new RNGestureHandlerPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAuthPackage(),
+            new RNFirebaseStoragePackage(),
             new RNFirebaseDatabasePackage(),
+            new RNFirebaseFirestorePackage(),
             new MapsPackage()
       );
     }

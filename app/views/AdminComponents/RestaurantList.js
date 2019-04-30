@@ -12,21 +12,21 @@ import styles from '../../styles/AdminHomeStyle'
 import update from 'immutability-helper';
 import firebase from 'react-native-firebase';
 
+AnimatableContainer = Animatable.createAnimatableComponent(Container);
+
 const db = firebase.database();
 const fs = firebase.firestore();
-
-AnimatableContainer = Animatable.createAnimatableComponent(Container);
 const datas = [
     {
         name: 'alalalalala',
         images: ['https://www.errenskitchen.com/wp-content/uploads/2015/02/Quick-Easy-Spaghetti-Bolognese2-1.jpg', 'https://www.recipes.co.nz/ic/3858989205/Spaghetti-Bolognese-or-Pasta.1.1.jpg'],
-        available: true,
+        open: true,
         description: 'whqweuihq0ohfqhfqofhofqjdfolqkndosdvjwovmwopfiwlekvnwlf  w wfwkfwoojgkwkpfgoijwkefwpfjowfwpogfwnfwpfjwfpwgjwfwpofljwpfowejlf wpfwjjefwpgfwjftwmeofjwpefoofjjop'
     },
     {
         name: 'babababababababa',
         images: ['https://www.errenskitchen.com/wp-content/uploads/2015/02/Quick-Easy-Spaghetti-Bolognese2-1.jpg', 'https://www.recipes.co.nz/ic/3858989205/Spaghetti-Bolognese-or-Pasta.1.1.jpg'],
-        available: false,
+        open: false,
         description: 'whqweuihq0ohfqhfqofhofqjdfolqkndosdvjwovmwopfiwlekvnwlf  w wfwkfwoojgkwkpfgoijwkefwpfjowfwpogfwnfwpfjwfpwgjwfwpofljwpfowejlf wpfwjjefwpgfwjftwmeofjwpefoofjjop'
     }
 ];
@@ -35,24 +35,25 @@ class HomeView extends Component {
         super(props);
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
-            menuListData: datas,
-            menuIdData:[],
+            ownerId: this.props.navigation.getParam('ownerId', ''),
+            owner: this.props.navigation.getParam('owner', {}),
+            resList: [],
+            resIdList: [],
             fabActive: true,
-            resId: this.props.navigation.getParam('resId', ''),
             isActionButtonVisible: true
         };
     }
 
     componentDidMount(){
         var s = this.state;
-        var menuIdData = [];
-        var menuListData = [];
-        fs.collection('items').where('restaurantId', '==', s.resId).limit(50).get().then(res => {
+        var resList = [];
+        var resIdList = [];
+        fs.collection('restaurants').where('ownerId', '==', s.ownerId).limit(50).get().then(res =>{
             res.docs.forEach((val) =>{
-                menuIdData.push(val.id);
-                menuListData.push(val.data());
+                resIdList.push(val.id);
+                resList.push(val.data());
+                this.setState({resList, resIdList})
             })
-            this.setState({menuIdData, menuListData});
         }).catch(err => {
             Toast.show({
                 text: 'An error occurred'+err.message,
@@ -73,14 +74,18 @@ class HomeView extends Component {
         });
     }
 
-    switchItemAvailable(secId, rowId, rowMap){
+    editItem(secId, rowId, rowMap){
+
+    }
+
+    switchItemAvailable(secId, rowId, rowMap) {
         //TODO:  Update db: Switch on success or just chill on failure
-        
+
         alert(rowId)
         var arr = this.state.menuListData;
         var item = arr[rowId];
-        var oldValue = item.available;
-        item['available'] = !oldValue;
+        var oldValue = item.open;
+        item['open'] = !oldValue;
         arr[rowId] = item;
         this.setState({
             menuListData: arr
@@ -95,40 +100,6 @@ class HomeView extends Component {
         this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({ routeName: route }));
     }
 
-    _onScroll = (event) => {
-        // Simple fade-in / fade-out animation
-        const CustomLayoutLinear = {
-            duration: 100,
-            create: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity
-            },
-            update: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity
-            },
-            delete: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity
-            }
-        }
-        // Check if the user is scrolling up or down by confronting the new scroll position with your own one
-        const currentOffset = event.nativeEvent.contentOffset.y
-        const direction = (currentOffset > 0 && currentOffset > this._listViewOffset) ?
-            'down' :
-            'up'
-        // If the user is scrolling down (and the action-button is still visible) hide it
-        const isActionButtonVisible = direction === 'up'
-        if (isActionButtonVisible !== this.state.isActionButtonVisible) {
-            LayoutAnimation.configureNext(CustomLayoutLinear)
-            this.setState({
-                isActionButtonVisible
-            })
-        }
-        // Update your scroll position
-        this._listViewOffset = currentOffset
-    }
-
     render() {
         return (
             <StyleProvider style={getTheme(platform)}>
@@ -141,19 +112,19 @@ class HomeView extends Component {
                         </Left>
                         <Body>
                             <Title>
-                                Menu
+                                My Restaurants
                             </Title>
                         </Body>
                     </Header>
                     <View style={{flex: 1}}>
                         {
-                            this.state.menuIdData.length>0?(
+                            this.state.resList.length>0?(
                                 <List
                                     leftOpenValue={70}
                                     rightOpenValue={-70}
-                                    dataSource={this.ds.cloneWithRows(this.state.menuListData)}
+                                    dataSource={this.ds.cloneWithRows(this.state.resList)}
                                     renderRow={(item, secId, rowId, rowMap) =>
-                                        <ListItem thumbnail>
+                                        <ListItem thumbnail button onPress={() => this.navigate('Home', {resId: this.state.resIdList[rowId]})}>
                                             <Left>
                                                 <CustomCachedImage
                                                     component={Thumbnail}
@@ -167,13 +138,13 @@ class HomeView extends Component {
                                             </Body>
                                             <Right>
                                                 <Row>
-                                                    <Switch value={item.available} onValueChange={()=> this.switchItemAvailable(secId, rowId, rowMap)}/>
+                                                    <Switch value={item.open} onValueChange={()=> this.switchItemAvailable(secId, rowId, rowMap)}/>
                                                 </Row>
                                             </Right>
                                         </ListItem>
                                     }
                                     renderLeftHiddenRow={data =>
-                                        <Button full info onPress={() => alert(data)}>
+                                        <Button full info onPress={() => this.editItem(secId, rowId, rowMap)}>
                                             <Icon active name="edit" type='Entypo' />
                                         </Button>
                                     }
@@ -183,16 +154,17 @@ class HomeView extends Component {
                                         </Button>
                                     }
                                 />
-                            ):(
-                                <View style={styles.noFollowersView}>
+                            ):(<View style={styles.noFollowersView}>
                                     <Icon name={'pizza'} style={styles.noFollowersIcon}/>
                                     <Text style={styles.noFollowersText}>
-                                        For your restaurant,
+                                        Build your business right away
                                     </Text>
                                     <Text note>
-                                        Add an item to your menu.
+                                        Add a restaurant
                                     </Text>
-                                    <Button transparent full larges iconRight onPress={() => this.navigate('AddItem', {resId: this.state.resId})}>
+                                    <Button transparent full larges iconRight onPress={() => {
+                                        this.navigate('AddRestaurant', {ownerId: this.state.ownerId})//TODO: 
+                                    }}>
                                         <Text>
                                             Add
                                         </Text>
@@ -201,13 +173,12 @@ class HomeView extends Component {
                                 </View>
                             )
                         }
-                        
                         <Fab
                             active={this.state.fabActive}
                             position='bottomRight'
                             style={{backgroundColor: platform.brandPrimary}}
                             onPress={() => {
-                                this.navigate('AddItems', {resId: this.state.resId})
+                                this.navigate('AddRestaurant', {ownerId: this.state.ownerId})//TODO: 
                             }}>
                             <Icon name='add'/>
                         </Fab>
@@ -217,5 +188,13 @@ class HomeView extends Component {
         );
     }
 }
-
-export default HomeView;
+const mapStateToProps = ({admin}) =>{
+    return {admin}
+}
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        saveAdmin
+    }, dispatch)
+);
+const view = withNavigationFocus(HomeView)
+export default connect(mapStateToProps, mapDispatchToProps)(view);

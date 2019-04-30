@@ -26,5 +26,20 @@ export default StyleSheet.create({
     },
     formItem:{
         marginVertical: hp('1%'),
+    },
+    map:{
+        height: hp('70%')
+    },
+    buttonRowMargin:{
+        marginHorizontal:wp('1%')
+    },
+    tagContainer:{
+        backgroundColor: platform.brandLight,
+        borderColor: platform.brandDark,
+        borderWidth: 0.5,
+        borderRadius: 20
+    },
+    tagText:{
+        color: platform.brandDark
     }
 })

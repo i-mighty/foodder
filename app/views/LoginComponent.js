@@ -13,9 +13,11 @@ import config from '../../app.json'
 import Firebase from 'react-native-firebase';
 import Dialog from "react-native-dialog";
 import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'react-native-firebase';
 
 const auth = Firebase.auth();
 const db = Firebase.database();
+const fs = firebase.firestore()
 
 class LoginView extends Component {
     constructor(props) {
@@ -185,19 +187,31 @@ class LoginView extends Component {
         }
             this.props.saveUser(val);
         var uid = auth.currentUser.uid;
-        db.ref('users/'+uid).once('value').then(snap => {
-            if(snap.val()){
+        fs.collection('users').doc(uid).get().then(res =>{
+            if(res.exists){
                 this.props.saveUser(snap.val());
                 this._showToast('Signing in...', 'default')
             }else{
-                db.ref('users/' + uid).set(val).then(() => {
+                fs.collection('users').doc(uid).set(val).then(() => {
                     this.setState({ spinner: false });
                     this.navigateNested('App', 'Home');
                 }).catch(err => this._showToast(err.message, 'danger'))
             }
-            this.setState({ spinner: false });
-            this.navigateNested('App', 'Home');
+
         })
+        // db.ref('users/'+uid).once('value').then(snap => {
+        //     if(snap.val()){
+        //         this.props.saveUser(snap.val());
+        //         this._showToast('Signing in...', 'default')
+        //     }else{
+        //         db.ref('users/' + uid).set(val).then(() => {
+        //             this.setState({ spinner: false });
+        //             this.navigateNested('App', 'Home');
+        //         }).catch(err => this._showToast(err.message, 'danger'))
+        //     }
+        //     this.setState({ spinner: false });
+        //     this.navigateNested('App', 'Home');
+        // })
     }
 
     _showToast(err, type){

@@ -29,7 +29,7 @@ class SettingsComponent extends Component {
                 <AnimatableContainer animation='fadeInRight'>
                     <Header>
                         <Left>
-                            <Button transparent onPress={() => this.props.navigation.navigate('Profile')}>
+                            <Button transparent onPress={() => this.props.navigation.goBack()}>
                                 <Icon name='arrow-back'/>
                             </Button>
                         </Left>
@@ -104,7 +104,16 @@ class SettingsComponent extends Component {
             </StyleProvider>
         );
     }
+    navigate(route) {
+        this.props.navigation.navigate(route);
     }
+
+    navigateNested(navigator, route) {
+        this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
+            routeName: route
+        }));
+    }
+}
 
 const mapStateToProps = ({user}) =>{
     return {user}

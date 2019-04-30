@@ -2,8 +2,16 @@ import React, { Component } from 'react';
 import { View, ListView } from 'react-native';
 import AnimatedComponent from '../AnimatedComponent';
 import moment from 'moment';
+import platform from '../../native-base-theme/variables/platform';
+import getTheme from '../../native-base-theme/components';
 import { Container, Header, Left, Right, Icon, Body, Text, Content, List, Button, Thumbnail, ListItem, Title } from 'native-base';
 import { CustomCachedImage } from 'react-native-img-cache';
+import firebase from 'react-native-firebase';
+import { Toast } from 'native-base';
+
+const db = firebase.database();
+const storage = firebase.storage();
+const fs = firebase.firestore();
 
 const datas = [
     'Simon Mignolet',
@@ -24,14 +32,18 @@ class ActiveOrdersComponent extends Component {
         };
     }
 
+    componentDidMount(){
+        fs.collection('orders').where('')
+    }
+
     render() {
         return (
             <AnimatedComponent>
                 <Container>
                     <Header>
                         <Left>
-                            <Button transparent>
-                                <Icon name='arrow-back'/>
+                            <Button transparent onPress={() => this.props.navigation.openDrawer()}>
+                                <Icon name={'menu'}/>
                             </Button>
                         </Left>
                         <Body>
@@ -73,7 +85,7 @@ class ActiveOrdersComponent extends Component {
                                 </Button>}
                                 renderRightHiddenRow={(data, secId, rowId, rowMap) =>
                                 <Button full danger onPress={ () => this.deleteRow(secId, rowId, rowMap)}>
-                                    <Icon active name="trash" />
+                                    <Icon type='FontAwesome5' active name="dolly" />
                                 </Button>}
                             />
                     </Content>

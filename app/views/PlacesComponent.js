@@ -87,6 +87,15 @@ class PlacesComponent extends Component {
             </StyleProvider>
         );
     }
+    navigate(route) {
+        this.props.navigation.navigate(route);
+    }
+
+    navigateNested(navigator, route) {
+        this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
+            routeName: route
+        }));
+    }
 }
 const mapStateToProps = ({user}) =>{
     return {user}

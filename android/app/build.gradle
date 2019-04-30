@@ -103,6 +103,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true  // needed for firestore:
     }
     splits {
         abi {
@@ -142,6 +143,10 @@ dependencies {
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-firebase')
     implementation project(':react-native-maps')
+    implementation(project(':react-native-geolocation-service')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -149,6 +154,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-database:16.0.6'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.firebase:firebase-storage:16.0.5'
+    implementation 'com.google.firebase:firebase-firestore:17.1.5'
+
+    implementation 'com.facebook.fresco:fresco:1.10.0'
+    implementation 'com.facebook.fresco:animated-gif:1.10.0'
 
     implementation 'com.google.android.gms:play-services-base:16.1.0'   
     implementation 'com.google.android.gms:play-services-maps:16.1.0'

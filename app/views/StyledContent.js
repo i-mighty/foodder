@@ -19,6 +19,7 @@ class StyledContent extends Component {
             </StyleProvider>
         );
     }
+    
 }
 
 export default StyledContent;

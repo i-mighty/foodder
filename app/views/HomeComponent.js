@@ -29,7 +29,7 @@ class HomeComponent extends Component {
                         <Header>
                             <Body>
                                 <Title>
-                                    Home
+                                    Menu
                                 </Title>
                             </Body>
                         </Header>
@@ -43,7 +43,7 @@ class HomeComponent extends Component {
                                     iconStyle={styles.tileIcon}
                                     iconName='contact'
                                     type='banner'
-                                    onPress={() => {}}
+                                    onPress={() => {this.navigate('Place')}}
                                 />
                             </Row>
                             <SectionLabel text='Foods'/>
@@ -55,7 +55,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => {}}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                                 <Col>
@@ -65,7 +65,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => {}}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                             </Row>
@@ -78,7 +78,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => { }}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                                 <Col>
@@ -88,7 +88,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => { }}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                             </Row>
@@ -101,7 +101,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => { }}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                                 <Col>
@@ -111,30 +111,7 @@ class HomeComponent extends Component {
                                         iconViewStyle={styles.smallerTileIcon}
                                         iconName='contact'
                                         type='tile'
-                                        onPress={() => { }}
-                                    />
-                                </Col>
-                            </Row>
-                            <SectionLabel text='Bars and Lounges'/>
-                            <Row style={styles.tileRow}>
-                                <Col>
-                                    <FoodTile
-                                        backgroundStyle={styles.smallerTile}
-                                        iconStyle={styles.tileIcon}
-                                        iconViewStyle={styles.smallerTileIcon}
-                                        iconName='contact'
-                                        type='tile'
-                                        onPress={() => { }}
-                                    />
-                                </Col>
-                                <Col>
-                                    <FoodTile
-                                        backgroundStyle={styles.smallerTile}
-                                        iconStyle={styles.tileIcon}
-                                        iconViewStyle={styles.smallerTileIcon}
-                                        iconName='contact'
-                                        type='tile'
-                                        onPress={() => { }}
+                                        onPress={() => {this.navigate('Item')}}
                                     />
                                 </Col>
                             </Row>
@@ -143,10 +120,19 @@ class HomeComponent extends Component {
                 </AnimatableContainer>
         );
     }
+    navigate(route) {
+        this.props.navigation.navigate(route);
+    }
+
+    navigateNested(navigator, route) {
+        this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
+            routeName: route
+        }));
+    }
 }
 const mapStateToProps = ({user}) =>{
     return {user}
-}
+};
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
         saveUser

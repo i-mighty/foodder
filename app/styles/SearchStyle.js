@@ -21,7 +21,7 @@ export default StyleSheet.create({
         width: wp('100%'),
         paddingHorizontal: wp('2%'),
         paddingVertical: hp('1%'),
-        marginHorizontal: hp('1%'),
+        marginHorizontal: hp('2%'),
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -30,5 +30,16 @@ export default StyleSheet.create({
     },
     carouselCardBaseText:{
         color: '#eee'
+    },
+    notFoundImage:{
+        height: hp('25%'),
+        width: wp('60%')
+    },
+    notFoundView:{
+        height: hp('30%'),
+    },
+    //MakeOrderStyles
+    orderCard:{
+
     }
 });

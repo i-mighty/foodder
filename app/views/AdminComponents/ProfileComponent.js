@@ -2,20 +2,28 @@ import React, { Component } from 'react';
 import {Text as RNText} from 'react-native';
 import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem, View} from 'native-base'
 import * as Animatable from 'react-native-animatable';
-import { withNavigationFocus } from 'react-navigation';
+import {withNavigationFocus, NavigationActions } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {saveUser} from '../data/Actions';
-import getTheme from '../native-base-theme/components';
-import platform from '../native-base-theme/variables/platform';
+import {saveUser} from '../../data/Actions';
+import getTheme from '../../native-base-theme/components';
+import platform from '../../native-base-theme/variables/platform';
 import { Avatar, Icon as RNEIcon } from 'react-native-elements';
-import styles from '../styles/ProfileStyle'
+import firebase from 'react-native-firebase';
+import styles from '../../styles/ProfileStyle'
+
+const auth = firebase.auth();
 AnimatableContainer = Animatable.createAnimatableComponent(Container);
 class ProfileComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
+    }
+
+    logout(){
+        auth.signOut();
+        this.navigateNested('Auth', 'Login');
     }
 
     render() {
@@ -29,11 +37,11 @@ class ProfileComponent extends Component {
                                 My Profile
                             </Title>
                         </Body>
-                        <Right>
+                        {/* <Right>
                             <Button transparent onPress={() => this.props.navigation.navigate('Settings')}>
                                 <Icon name='settings'/>
                             </Button>
-                        </Right>
+                        </Right> */}
                     </Header>
                 </StyleProvider>
                 <StyleProvider style={getTheme(platform)}>
@@ -44,7 +52,7 @@ class ProfileComponent extends Component {
                                 source={{
                                     uri: ''
                                 }}
-                                editButton={<Icon name='camera'/>}
+                                editButton={<RNEIcon name='camera'/>}
                                 title="MD"
                                 rounded
                                 showEditButton
@@ -59,7 +67,7 @@ class ProfileComponent extends Component {
                         </Col>
                         <List>
                             <Separator/>
-                            <ListItem icon>
+                            {/* <ListItem icon>
                                 <Left>
                                     <Button primary >
                                         <Icon name='card'/>
@@ -73,7 +81,7 @@ class ProfileComponent extends Component {
                                 <Right>
                                     <Icon active name="arrow-forward" />
                                 </Right>
-                            </ListItem>
+                            </ListItem> */}
                             <ListItem icon>
                                 <Left>
                                     <Button light >

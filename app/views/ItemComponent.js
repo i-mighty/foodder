@@ -13,24 +13,44 @@ import {
     widthPercentageToDP
 } from 'react-native-responsive-screen';
 import ViewMoreText from 'react-native-view-more-text';
+import firebase from 'react-native-firebase';
+import Placeholder from 'rn-placeholder';
+
+const db = firebase.database();
+const storage = firebase.storage();
+const fs = firebase.firestore();
 
 export class HomeView extends Component {
+    static navigationOptions = {
+        tabBarVisible: false,
+    };
 
     constructor(props){
         super(props);
         this.state = {
-            item:{
-                images:[
-                    'http://www.ourperfectpalette.com/wp-content/uploads/2017/09/IMG_0140.jpg',
-                    'http://www.ourperfectpalette.com/wp-content/uploads/2017/10/IMG_0163.jpg',
-                    'http://sisijemimah.com/wp-content/uploads/2015/08/IMG_8335.jpg',
-                    'http://foodies.waiter.com.ng/wp-content/uploads/2018/01/FB_IMG_1515921887191-720x400.jpg'
-                ]
-            }
+            // itemId: this.props.navigation.getParam('itemId', ''),
+            itemId: 'xyzItem',
+            ready: false,
+            item:{},
+            // images:[
+            //     'http://www.ourperfectpalette.com/wp-content/uploads/2017/09/IMG_0140.jpg',
+            //     'http://www.ourperfectpalette.com/wp-content/uploads/2017/10/IMG_0163.jpg',
+            //     'http://sisijemimah.com/wp-content/uploads/2015/08/IMG_8335.jpg',
+            //     'http://foodies.waiter.com.ng/wp-content/uploads/2018/01/FB_IMG_1515921887191-720x400.jpg'
+            // ]
         };
     }
 
-    _renderItem ({item, index}) {
+    componentDidMount(): void {
+        let s = this.state;
+        fs.collection('items').doc(s.itemId).get().then(value => {
+            this.setState({item: value.data(), ready: true})
+        }).catch(err => {
+
+        })
+    }
+
+    static _renderItem ({item, index}) {
         return (
             <Avatar
                 rounded
@@ -41,14 +61,14 @@ export class HomeView extends Component {
         );
     }
 
-    renderViewMore(onPress){
+    static renderViewMore(onPress){
         return(
             <Text style={{color: platform.brandLight, fontSize: 12,}}
             onPress={onPress}>More</Text>
         )
     }
 
-    renderViewLess(onPress){
+    static renderViewLess(onPress){
         return(
             <Text style={{color: platform.brandDanger, fontSize: 12,}}
             onPress={onPress}>Less</Text>
@@ -61,22 +81,49 @@ export class HomeView extends Component {
                 <Container>
                     <Content>
                         <Card style={styles.topPane}>
-                            <Avatar
-                                rounded
-                                size='xlarge'
-                                source={require('../assets/jollof1.jpeg')}
-                                containerStyle={styles.lAvatar}
-                            />
-                            <Carousel
-                                ref={(c) => { this._carousel = c; }}
-                                data={this.state.item.images}
-                                renderItem={this._renderItem}
-                                sliderWidth={wp('80%')}
-                                itemWidth={90}
-                            />
-                            <H1 style={styles.name}>
-                                Ewa Agonyin
-                            </H1>
+                            <Placeholder.Box
+                                height={80}
+                                width={80}
+                                radius={75}
+                                color='#aaa7'
+                                animation='fade'
+                                onReady={this.state.ready}
+                                style={{alignItems: 'center', alignSelf: 'center', marginVertical: 15}}
+                            >
+                                <Avatar
+                                    rounded
+                                    size={100}
+                                    source={require('../assets/jollof1.jpeg')}
+                                    containerStyle={styles.lAvatar}
+                                />
+                            </Placeholder.Box>
+                            <Placeholder.Box
+                                height={75}
+                                width='80%'
+                                color='#aaa7'
+                                animation='fade'
+                                onReady={this.state.ready}
+                                style={{alignItems: 'center', alignSelf: 'center', marginVertical: 15}}
+                            >
+                                <Carousel
+                                    ref={(c) => { this._carousel = c; }}
+                                    data={this.state.item.images}
+                                    renderItem={HomeView._renderItem}
+                                    sliderWidth={wp('80%')}
+                                    itemWidth={90}
+                                />
+                            </Placeholder.Box>
+                            <Placeholder.Line
+                                color="#aaa7"
+                                width="77%"
+                                animation='fade '
+                                style={{alignItems: 'center', alignSelf: 'center', marginVertical: 15}}
+                                onReady={this.state.ready}
+                            >
+                                <H1 style={styles.name}>
+                                    {this.state.item.name}
+                                </H1>
+                            </Placeholder.Line>
                         </Card>
                         <View style={styles.bodyPane}>
                             <View style={styles.hView}>
@@ -104,8 +151,8 @@ export class HomeView extends Component {
                                 <View style={styles.descContainer}>
                                     <ViewMoreText
                                         numberOfLines={2}
-                                        renderViewMore={this.renderViewMore}
-                                        renderViewLess={this.renderViewLess}
+                                        renderViewMore={HomeView.renderViewMore}
+                                        renderViewLess={HomeView.renderViewLess}
                                     >
                                         <Text style={styles.desc}>
                                             A very lengthy description of the restaurant in question so that the user can have a brief understanding of what to expect should they find themselves there.
@@ -117,7 +164,7 @@ export class HomeView extends Component {
                     </Content>
                     <Footer>
                         <FooterTab>
-                            <Button success>
+                            <Button success onPress={() => this.navigate('Checkout', {itemId: this.state.itemId, item: this.state.item})}>
                                 <Text>Order now</Text>
                             </Button>
                         </FooterTab>
@@ -125,6 +172,15 @@ export class HomeView extends Component {
                 </Container>
             </StyleProvider>
         )
+    }
+    navigate(route, params) {
+        this.props.navigation.navigate(route, params);
+    }
+
+    navigateNested(navigator, route) {
+        this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
+            routeName: route
+        }));
     }
 }
 
