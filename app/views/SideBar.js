@@ -1,14 +1,16 @@
 import React from "react";
 import { AppRegistry, Image, ImageBackground, StatusBar } from "react-native";
-import { Container, Content, Text, List, ListItem } from "native-base";
+import { Container, Content, Text, List, ListItem, H3, Left, Body, Icon } from "native-base";
 const routes = [
     {
-        value: 'Restaurants',
-        title: 'My Restaurants'
+        value: 'Restaurant',
+        title: 'My Restaurants',
+        icon: 'restaurant'
     },
     {
         value:'ActiveOrders',
-        title: 'Active Orders'
+        title: 'Active Orders', 
+        icon: 'clipboard'
     },
     // {
     //     value:'AddItems',
@@ -20,11 +22,13 @@ const routes = [
     // },
     {
         value:'Customers',
-        title: 'Customers'
+        title: 'Customers',
+        icon: 'people'
     },
     {
         value: 'Profile',
-        title: 'Profile'
+        title: 'Profile', 
+        icon: 'contact'
     },
 ];
 export default class SideBar extends React.Component {
@@ -42,10 +46,8 @@ export default class SideBar extends React.Component {
                         }}>
                         <Image
                             square
-                            style={{ height: 80, width: 70 }}
-                            source={{
-                                uri: "https://github.com/GeekyAnts/NativeBase-KitchenSink/raw/react-navigation/img/logo.png"
-                            }}
+                            style={{ height: 150, width: 150, borderRadius: 75 }}
+                            source={require('../assets/logo.png')}
                         />
                     </ImageBackground>
                     <List
@@ -53,9 +55,16 @@ export default class SideBar extends React.Component {
                         renderRow={data => {
                             return (
                                 <ListItem
+                                    icon
                                     button
-                                    onPress={() => this.props.navigation.navigate(data.value)}>
-                                    <Text>{data.title}</Text>
+                                    onPress={() => this.props.navigation.navigate(data.value)}
+                                    style={{paddingVertical: 30}}>
+                                    <Left>
+                                        <Icon name={data.icon} style={style}/>
+                                    </Left>
+                                    <Body>
+                                        <H3 style={style}>{data.title}</H3>
+                                    </Body>
                                 </ListItem>
                             );
                         }}
@@ -65,3 +74,4 @@ export default class SideBar extends React.Component {
         );
     }
 }
+const style = {color: '#555'};
