@@ -181,6 +181,7 @@ class LoginView extends Component {
             val = {
                 name: this.state.name,
                 phoneNumber: this.state.fixedNo,
+                uid: auth.currentUser.uid
             };
         } else {
             val = this.props.user;
