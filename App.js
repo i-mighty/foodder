@@ -45,7 +45,16 @@ const Profile = createStackNavigator({
     },
     Settings:{
         screen: SettingsComponent
-    }
+    },
+    Item:{
+        screen: ItemComponent,
+    },
+    Checkout:{
+        screen: MakeOrderComponent,
+    },
+    Payment:{
+        screen: PaymentComponent,
+    },
 },{
     headerMode:'none'
 });
@@ -89,6 +98,24 @@ const HomeStack = createStackNavigator({
     Payment:{
         screen: PaymentComponent,
         navigationOptions: { tabBarVisible: false  }
+    },
+},
+{
+    initialRouteName: 'Home',
+    headerMode: 'none'
+});
+const OrderStack = createStackNavigator({
+    Home:{
+        screen: OrderComponent
+    },
+    Item:{
+        screen: ItemComponent,
+    },
+    Checkout:{
+        screen: MakeOrderComponent,
+    },
+    Payment:{
+        screen: PaymentComponent,
     },
 },
 {
@@ -140,7 +167,7 @@ const AppStack = createBottomTabNavigator({
         }
     },
     Order: {
-        screen: OrderComponent,
+        screen: OrderStack,
         navigationOptions: {
             tabBarIcon: function (xtics) {
                 if(xtics.focused){
@@ -176,7 +203,7 @@ const AppStack = createBottomTabNavigator({
         }
     },
 }, {
-    initialRouteName:'Home',
+    initialRouteName:'Profile',
     tabBarOptions:{
         activeTintColor: platform.brandDark,
         inactiveTintColor: '#eee',
@@ -242,7 +269,7 @@ const RootStack = createSwitchNavigator({
     initialRouteName: 'Admin'
 });
 
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(AppStack);
 
 export default class App extends Component{
     componentDidMount(){
