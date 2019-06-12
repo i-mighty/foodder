@@ -26,6 +26,9 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    buttonRow:{
+        width: wp('80%')
+    },
     lAvatar:{
         borderColor: platform.brandLight, 
         borderWidth: 2, 

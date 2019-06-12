@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { connect } from 'react-redux'
-import { Content, Container, StyleProvider, H1, Button, Text, H2, H3, Footer, Card, FooterTab } from 'native-base';
+import { Content, Container, StyleProvider, H1, Button, Text, H2, H3, Footer, Card, FooterTab, Grid, Col, Icon, Toast } from 'native-base';
 import { Avatar, Badge } from 'react-native-elements';
 import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
@@ -15,12 +14,16 @@ import {
 import ViewMoreText from 'react-native-view-more-text';
 import firebase from 'react-native-firebase';
 import Placeholder from 'rn-placeholder';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {saveUser} from '../data/Actions';
+import { withNavigationFocus } from 'react-navigation';
 
 const db = firebase.database();
 const storage = firebase.storage();
 const fs = firebase.firestore();
 
-export class HomeView extends Component {
+export class ItemComponent extends Component {
     static navigationOptions = {
         tabBarVisible: false,
     };
@@ -28,8 +31,8 @@ export class HomeView extends Component {
     constructor(props){
         super(props);
         this.state = {
-            // itemId: this.props.navigation.getParam('itemId', ''),
-            itemId: 'xyzItem',
+            itemId: this.props.navigation.getParam('itemId', ''),
+            // itemId: 'xyzItem',
             ready: false,
             item:{},
             // images:[
@@ -47,6 +50,22 @@ export class HomeView extends Component {
             this.setState({item: value.data(), ready: true})
         }).catch(err => {
 
+        })
+    }
+
+    addFavorite(){
+        fs.collection('favorites').doc(this.props.user.id).collection().add({
+            itemId: this.state.itemId, 
+            item: this.state.item
+        }).then(res => {
+            Toast.show({
+                type: 'success', 
+                text: 'Added to favorites', 
+            })
+        }).catch(err => {
+            Toast.show({
+                text: 'Could not add to favorite.\nPlease try again'
+            })
         })
     }
 
@@ -108,7 +127,7 @@ export class HomeView extends Component {
                                 <Carousel
                                     ref={(c) => { this._carousel = c; }}
                                     data={this.state.item.images}
-                                    renderItem={HomeView._renderItem}
+                                    renderItem={ItemComponent._renderItem}
                                     sliderWidth={wp('80%')}
                                     itemWidth={90}
                                 />
@@ -124,6 +143,28 @@ export class HomeView extends Component {
                                     {this.state.item.name}
                                 </H1>
                             </Placeholder.Line>
+                            <Grid style={styles.buttonRow}>
+                                <Col>
+                                    <Button transparent icon info
+                                        onPress={() => this.addFavorite()}
+                                    >
+                                        <Icon name='thumbs-up'/>
+                                        <Text>
+                                            Like
+                                        </Text>
+                                    </Button>
+                                </Col>
+                                <Col>
+                                    <Button icon transparent success
+                                        onPress={() => this.navigate('Checkout', {itemId: this.state.itemId, item: this.state.item})}
+                                    >
+                                        <Icon name='cart'/>
+                                        <Text>
+                                            Order Now
+                                        </Text>
+                                    </Button>
+                                </Col>
+                            </Grid>
                         </Card>
                         <View style={styles.bodyPane}>
                             <View style={styles.hView}>
@@ -151,8 +192,8 @@ export class HomeView extends Component {
                                 <View style={styles.descContainer}>
                                     <ViewMoreText
                                         numberOfLines={2}
-                                        renderViewMore={HomeView.renderViewMore}
-                                        renderViewLess={HomeView.renderViewLess}
+                                        renderViewMore={ItemComponent.renderViewMore}
+                                        renderViewLess={ItemComponent.renderViewLess}
                                     >
                                         <Text style={styles.desc}>
                                             A very lengthy description of the restaurant in question so that the user can have a brief understanding of what to expect should they find themselves there.
@@ -162,13 +203,6 @@ export class HomeView extends Component {
                             </View>
                         </View>
                     </Content>
-                    <Footer>
-                        <FooterTab>
-                            <Button success onPress={() => this.navigate('Checkout', {itemId: this.state.itemId, item: this.state.item})}>
-                                <Text>Order now</Text>
-                            </Button>
-                        </FooterTab>
-                    </Footer>
                 </Container>
             </StyleProvider>
         )
@@ -184,12 +218,14 @@ export class HomeView extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    
-})
+const mapStateToProps = ({user}) =>{
+    return {user}
+};
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        saveUser
+    }, dispatch)
+);
 
-const mapDispatchToProps = {
-    
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView)
+const view = withNavigationFocus(ItemComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(view)
