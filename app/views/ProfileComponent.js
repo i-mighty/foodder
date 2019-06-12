@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Text as RNText} from 'react-native';
-import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem, View} from 'native-base'
+import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, List, ListItem, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem, View, Toast} from 'native-base'
 import * as Animatable from 'react-native-animatable';
 import { withNavigationFocus } from 'react-navigation';
 import {connect} from 'react-redux';
@@ -10,12 +10,32 @@ import getTheme from '../native-base-theme/components';
 import platform from '../native-base-theme/variables/platform';
 import { Avatar, Icon as RNEIcon } from 'react-native-elements';
 import styles from '../styles/ProfileStyle'
+import firebase from "react-native-firebase";
+
+const db = firebase.database();
+const storage = firebase.storage();
+const fs = firebase.firestore();
+
 AnimatableContainer = Animatable.createAnimatableComponent(Container);
 class ProfileComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            favorites: []
         };
+    }
+
+    componentDidMount(){
+        var favorites = [];
+        fs.collection('favorites').doc(this.props.user.uid).collection().get().then(res => {
+            res.docs.forEach(doc => favorites.push(doc.data()))
+            this.setState({favorites});
+        }).catch(err => {
+            Toast.show({
+                type: 'danger', 
+                text: 'Could not detect an internet connection.\nPlease check your internet connection'
+            })
+        })
     }
 
     render() {
@@ -58,68 +78,51 @@ class ProfileComponent extends Component {
                             </H3>                         
                         </Col>
                         <List>
-                            <Separator/>
-                            <ListItem icon>
-                                <Left>
-                                    <Button primary >
-                                        <Icon name='card'/>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <RNText>
-                                        Manage Your Accounts
-                                    </RNText>
-                                </Body>
-                                <Right>
-                                    <Icon active name="arrow-forward" />
-                                </Right>
-                            </ListItem>
-                            <ListItem icon>
-                                <Left>
-                                    <Button light >
-                                        <Icon name='clock'/>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <RNText>
-                                        Payment History
-                                    </RNText>
-                                </Body>
-                                <Right>
-                                    <Icon active name="arrow-forward" />
-                                </Right>
-                            </ListItem>
-                            <ListItem icon>
-                                <Left>
-                                    <Button info >
-                                        <Icon name='person'/>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <RNText>
-                                        Edit Your Profile
-                                    </RNText>
-                                </Body>
-                                <Right>
-                                    <Icon active name="arrow-forward" />
-                                </Right>
-                            </ListItem>
-                            <ListItem icon>
-                                <Left>
-                                    <Button danger >
-                                        <Icon name='log-out'/>
-                                    </Button>
-                                </Left>
-                                <Body>
-                                    <RNText>
-                                        Log out
-                                    </RNText>
-                                </Body>
-                                <Right>
-                                    <Icon active name="arrow-forward" />
-                                </Right>
-                            </ListItem>
+                            <Separator>
+                                <Text>
+                                    Favorites
+                                </Text>
+                            </Separator>
                         </List>
+                        {
+                            this.state.favorites.length > 0?(
+                                <List
+                                    dataArray={this.state.favorites}
+                                    renderRow={data =>
+                                    <ListItem thumbnail>
+                                        <Left>
+                                            <Thumbnail
+                                                source={{ uri: data.item.images[0]}}
+                                            />
+                                        </Left>
+                                        <Body>
+                                            <Text> {data.item.name} </Text>
+                                            <Text note numberOfLines={2}>{data.item.description}</Text>
+                                        </Body>
+                                        <Right>
+                                            <Button transparent
+                                                onPress={() => this.props.navigation.navigate('Item', {itemId: data.itemId})}
+                                            >
+                                                <Text>View</Text>
+                                            </Button>
+                                            {/* <Button transparent danger>
+                                                <Text>Remove</Text>
+                                            </Button> */}
+                                        </Right>
+                                    </ListItem>}
+                                />
+                            ):(
+                                <View style={styles.noFollowersView}>
+                                    <Icon name={'list'} type={'Entypo'} style={styles.noFollowersIcon}/>
+                                    <Text style={styles.noFollowersText}>
+                                        No favorites yet
+                                    </Text>
+                                    <Text note>
+                                        Food items you like would appear here
+                                    </Text>
+                                </View>
+                            )
+                        }
                     </Content>
                 </StyleProvider>
             </AnimatableContainer>
