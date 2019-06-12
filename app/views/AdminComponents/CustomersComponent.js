@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, ListView } from 'react-native';
 import { Container, Header, Left, Button, Text, Icon, Body, Content, List, ListItem, Right, Thumbnail, Title } from 'native-base';
 import { CustomCachedImage } from 'react-native-img-cache';
+import StyledHeader from '../StyledHeader'
 import moment from 'moment';
 import AnimatedComponent from '../AnimatedComponent';
 
@@ -29,7 +30,7 @@ class CustomersComponent extends Component {
         return (
             <AnimatedComponent>
                 <Container>
-                    <Header>
+                    <StyledHeader>
                         <Left>
                             <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                 <Icon name={'menu'}/>
@@ -40,7 +41,7 @@ class CustomersComponent extends Component {
                                 Customers
                             </Title>
                         </Body>
-                    </Header>
+                    </StyledHeader>
                     <Content>
                         <List
                             leftOpenValue={0}
