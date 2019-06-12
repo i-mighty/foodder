@@ -30,6 +30,7 @@ class Payment extends Component {
         var val = {
             userId: s.userId,
             itemId: s.itemId,
+            item: s.item,
             resId: s.resId,
             price: s.price,
             ownerId: s.ownerId,
