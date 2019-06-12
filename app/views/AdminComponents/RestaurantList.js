@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import {connect} from 'react-redux';
 import {withNavigationFocus} from 'react-navigation'
 import {bindActionCreators} from 'redux';
-import {saveUser} from '../../data/Actions';
+import {saveUser, saveAdmin} from '../../data/Actions';
 import getTheme from '../../native-base-theme/components';
 import platform from '../../native-base-theme/variables/platform';
 import { CustomCachedImage } from 'react-native-img-cache';
