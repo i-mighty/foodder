@@ -44,7 +44,7 @@ export class ItemComponent extends Component {
         };
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
         let s = this.state;
         fs.collection('items').doc(s.itemId).get().then(value => {
             this.setState({item: value.data(), ready: true})
