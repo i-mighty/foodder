@@ -47,7 +47,7 @@ class AddRestaurant extends Component {
             key: '',
             errorText:'',
             error: null,
-            ownerId: this.props.navigation.getParams('ownerId', '')
+            ownerId: this.props.navigation.getParam('ownerId', '')
         };
     }
 
