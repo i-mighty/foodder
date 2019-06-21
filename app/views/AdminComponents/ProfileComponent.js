@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import {withNavigationFocus, NavigationActions } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {saveUser} from '../../data/Actions';
+import {saveAdmin} from '../../data/Actions';
 import getTheme from '../../native-base-theme/components';
 import platform from '../../native-base-theme/variables/platform';
 import { Avatar, Icon as RNEIcon } from 'react-native-elements';
@@ -32,16 +32,24 @@ class ProfileComponent extends Component {
             <AnimatableContainer animation='fadeIn'>
                 <StyleProvider style={getTheme(platform)}>
                     <Header searchBar>
+                        <Left>
+                            <Button icon transparent>
+                                <Icon name="menu"/>
+                            </Button>
+                        </Left>
                         <Body>
                             <Title>
                                 My Profile
                             </Title>
                         </Body>
-                        {/* <Right>
+                        <Right>
                             <Button transparent onPress={() => this.props.navigation.navigate('Settings')}>
                                 <Icon name='settings'/>
                             </Button>
-                        </Right> */}
+                            <Button transparent onPress={() => this.logout()}>
+                                <Icon name='log-out'/>
+                            </Button>
+                        </Right>
                     </Header>
                 </StyleProvider>
                 <StyleProvider style={getTheme(platform)}>
@@ -82,7 +90,7 @@ class ProfileComponent extends Component {
                                     <Icon active name="arrow-forward" />
                                 </Right>
                             </ListItem> */}
-                            <ListItem icon>
+                            {/* <ListItem icon>
                                 <Left>
                                     <Button light >
                                         <Icon name='clock'/>
@@ -126,7 +134,7 @@ class ProfileComponent extends Component {
                                 <Right>
                                     <Icon active name="arrow-forward" />
                                 </Right>
-                            </ListItem>
+                            </ListItem> */}
                         </List>
                     </Content>
                 </StyleProvider>
@@ -142,13 +150,17 @@ class ProfileComponent extends Component {
             routeName: route
         }));
     }
+    logout(){
+        this.props.saveUser({name: '', email: ''})
+        this.navigateNested('Auth', 'Admin')
+    }
 }
-const mapStateToProps = ({user}) =>{
-    return {user}
+const mapStateToProps = ({admin}) =>{
+    return {admin}
 }
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
-        saveUser
+        saveAdmin
     }, dispatch)
 );
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigationFocus(ProfileComponent));

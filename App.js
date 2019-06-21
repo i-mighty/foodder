@@ -16,6 +16,7 @@ import SearchComponent from './app/views/SearchComponent';
 import HomeComponent from './app/views/HomeComponent';
 import AdminHome from './app/views/AdminComponents/HomeComponents';
 import ProfileComponent from './app/views/ProfileComponent';
+import EditProfile from "./app/views/EditProfile";
 import PlacesComponent from './app/views/PlacesComponent';
 import PlaceComponent from './app/views/PlaceComponent'
 import OrderComponent from './app/views/OrderComponent';
@@ -27,7 +28,9 @@ import ActiveOrders from './app/views/AdminComponents/ActiveOrdersComponent';
 import CustomersComponent from './app/views/AdminComponents/CustomersComponent'
 import AdminAuth from './app/views/AdminComponents/AdminAuth';
 import SideBar from "./app/views/SideBar";
+import SplashScreen from "./app/views/SplashScreen";
 import Restaurant from './app/views/AdminComponents/RestaurantList';
+import RestaurantHome from "./app/views/AdminComponents/PlaceComponent";
 import AdminProfile from './app/views/AdminComponents/ProfileComponent'
 import AdminEditProfile from './app/views/AdminComponents/EditProfile'
 import AddRestaurant from './app/views/AdminComponents/AddRestaurant';
@@ -42,6 +45,9 @@ app = {} || app;
 const Profile = createStackNavigator({
     Profile: {
         screen: ProfileComponent
+    },
+    Edit:{
+        screen: EditProfile
     },
     Settings:{
         screen: SettingsComponent
@@ -131,6 +137,15 @@ HomeStack.navigationOptions = ({navigation}) =>{
         tabBarVisible,
     };
 };
+OrderStack.navigationOptions = ({navigation}) =>{
+    let tabBarVisible = true;
+    if (navigation.state.index > 0) {
+        tabBarVisible = false;
+    }
+    return {
+        tabBarVisible,
+    };
+};
 SearchStack.navigationOptions = ({navigation}) =>{
     let tabBarVisible = true;
     if (navigation.state.index > 0) {
@@ -154,18 +169,18 @@ const AppStack = createBottomTabNavigator({
             }
         }
     },
-    Places: {
-        screen: PlacesComponent,
-        navigationOptions: {
-            tabBarIcon: function (xtics) {
-                if(xtics.focused){
-                    return <Icon name='pizza' style={styles.activeTab}/>
-                }else{
-                    return <Icon name='pizza' style={styles.inactiveTab}/>
-                }
-            }
-        }
-    },
+    // Places: {
+    //     screen: PlacesComponent,
+    //     navigationOptions: {
+    //         tabBarIcon: function (xtics) {
+    //             if(xtics.focused){
+    //                 return <Icon name='pizza' style={styles.activeTab}/>
+    //             }else{
+    //                 return <Icon name='pizza' style={styles.inactiveTab}/>
+    //             }
+    //         }
+    //     }
+    // },
     Order: {
         screen: OrderStack,
         navigationOptions: {
@@ -233,6 +248,9 @@ const AdminNav = createDrawerNavigator({
     Restaurant:{
         screen: Restaurant
     },
+    RestaurantHome:{
+        screen: RestaurantHome
+    },
     Profile:{
         screen: AdminProfile
     },
@@ -264,12 +282,15 @@ const RootStack = createSwitchNavigator({
     },
     Admin:{
         screen: AdminNav
+    },
+    Splash:{
+        screen: SplashScreen
     }
 }, {
-    initialRouteName: 'Admin'
+    initialRouteName: 'App'
 });
 
-const AppContainer = createAppContainer(AppStack);
+const AppContainer = createAppContainer(RootStack);
 
 export default class App extends Component{
     componentDidMount(){
@@ -291,11 +312,11 @@ export default class App extends Component{
 
 const styles = StyleSheet.create({
     activeTab:{
-        fontSize: 25,
+        fontSize: 28,
         color: platform.brandDark
     },
     inactiveTab:{
-        fontSize: 22,
+        fontSize: 24,
         color: '#fff'
     }
 });

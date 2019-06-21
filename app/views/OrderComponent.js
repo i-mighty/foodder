@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, StyleSheet } from 'react-native';
+import { ListView, StyleSheet, View } from 'react-native';
 import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, List, ListItem, Thumbnail, Toast} from 'native-base'
 import * as Animatable from 'react-native-animatable';
 import { withNavigationFocus } from 'react-navigation';
@@ -11,6 +11,10 @@ import platform from '../native-base-theme/variables/platform';
 import { CustomCachedImage } from 'react-native-img-cache';
 import firebase from "react-native-firebase";
 import { ConfirmDialog } from 'react-native-simple-dialogs';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+} from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     noFollowersIcon:{
@@ -62,7 +66,7 @@ class OrderComponent extends Component {
 
     componentDidMount(){
         var orders = [];
-        fs.collection('orders').doc(this.props.user.id).collection().get().then(res => {
+        fs.collection('orders').doc(this.props.user.id).get().then(res => {
             res.docs.forEach(doc => orders.push(doc.data()))
             this.setState({listViewData: orders})
         }).catch(err => {

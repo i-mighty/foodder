@@ -43,7 +43,7 @@ class HomeComponent extends Component {
                                     iconStyle={styles.tileIcon}
                                     iconName='contact'
                                     type='banner'
-                                    onPress={() => {this.navigate('Place')}}
+                                    onPress={() => {this.navigate('Item')}}
                                 />
                             </Row>
                             <SectionLabel text='Foods'/>
@@ -120,11 +120,13 @@ class HomeComponent extends Component {
                 </AnimatableContainer>
         );
     }
-    navigate(route) {
-        this.props.navigation.navigate(route);
+    navigate(route, params) {
+        params===undefined?
+            this.props.navigation.navigate(route):
+            this.props.navigation.navigate(route, params);
     }
 
-    navigateNested(navigator, route) {
+    navigateNested(navigator, route, params) {
         this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
             routeName: route
         }));

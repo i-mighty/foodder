@@ -15,6 +15,10 @@ import Tags from "react-native-tags";
 import AnimatedComponent from '../AnimatedComponent';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Avatar } from 'react-native-elements';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {saveAdmin} from '../data/Actions';
+import { withNavigationFocus } from 'react-navigation';
 
 AnimatableContainer = Animatable.createAnimatableComponent(Container);
 
@@ -33,8 +37,7 @@ class EditProfile extends Component {
             key: '',
             errorText: '',
             error: null,
-            ownerId: this.props.naviagtion.getParam('ownerId', ''),
-            resId: this.props.naviagtion.getParam('resId', '')
+            ownerId: this.props.navigation.getParam('ownerId', ''),
         };
     }
 
@@ -87,7 +90,7 @@ class EditProfile extends Component {
                             <Avatar
                                 title='AV'
                                 containerStyle={styles.formItem}
-                                source={{}}
+                                source={{uri: this.props.admin.avatar}}
                                 showEditButton
                                 onEditPress={() => this.newUpload()}
                             />
@@ -138,7 +141,8 @@ class EditProfile extends Component {
             that.setState({progressText: 'Uploading image...'})
             storage.ref('restaurant_owners/'+this.state.ownerId+'/avatar').putFile(s.imgSrc.path).then(file => {
                 fs.collection('restaurant_owners').doc(s.ownerId).update({
-                    avatar: file.downloadURL
+                    avatar: file.downloadURL,
+                    name: s.name
                 }).then(() =>{
                     this.uploadSuccess
                 })
@@ -172,5 +176,14 @@ class EditProfile extends Component {
         this.props.navigation.goBack()
     }
 }
+const mapStateToProps = ({admin}) =>{
+    return {admin}
+};
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        saveUser
+    }, dispatch)
+);
 
-export default EditProfile;
+const view = withNavigationFocus(EditProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(view)

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Text as RNText} from 'react-native';
-import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, List, ListItem, Right, StyleProvider, Text, Button, Icon, Col, H1, H3, List, Separator, ListItem, View, Toast} from 'native-base'
+import {Container, Content, Footer, FooterTab, Header, Body, Title, Left, Right, StyleProvider, Text, Button, Icon, Col, List, Separator, ListItem, View, Toast, H1, H3 } from 'native-base'
 import * as Animatable from 'react-native-animatable';
-import { withNavigationFocus } from 'react-navigation';
+import { withNavigationFocus, NavigationActions } from 'react-navigation';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {saveUser} from '../data/Actions';
@@ -27,15 +27,15 @@ class ProfileComponent extends Component {
 
     componentDidMount(){
         var favorites = [];
-        fs.collection('favorites').doc(this.props.user.uid).collection().get().then(res => {
-            res.docs.forEach(doc => favorites.push(doc.data()))
-            this.setState({favorites});
-        }).catch(err => {
-            Toast.show({
-                type: 'danger', 
-                text: 'Could not detect an internet connection.\nPlease check your internet connection'
-            })
-        })
+        // fs.collection('favorites').doc(this.props.user.uid).collection().get().then(res => {
+        //     res.docs.forEach(doc => favorites.push(doc.data()))
+        //     this.setState({favorites: favorites});
+        // }).catch(err => {
+        //     Toast.show({
+        //         type: 'danger', 
+        //         text: 'Could not detect an internet connection.\nPlease check your internet connection'
+        //     })
+        // })
     }
 
     render() {
@@ -43,7 +43,10 @@ class ProfileComponent extends Component {
             this.props.isFocused &&
             <AnimatableContainer animation='fadeIn'>
                 <StyleProvider style={getTheme(platform)}>
-                    <Header searchBar>
+                    <Header>
+                        <Left>
+                            
+                        </Left>
                         <Body>
                             <Title>
                                 My Profile
@@ -52,6 +55,12 @@ class ProfileComponent extends Component {
                         <Right>
                             <Button transparent onPress={() => this.props.navigation.navigate('Settings')}>
                                 <Icon name='settings'/>
+                            </Button>
+                            <Button transparent onPress={() => this.props.navigation.navigate('Edit')}>
+                                <Icon name='edit' type="Entypo"/>
+                            </Button>
+                            <Button transparent onPress={() => this.logout()}>
+                                <Icon name='log-out'/>
                             </Button>
                         </Right>
                     </Header>
@@ -69,7 +78,7 @@ class ProfileComponent extends Component {
                                 rounded
                                 showEditButton
                                 avatarStyle={styles.userPaneItems}
-                            />   
+                            />
                             <H1 style={styles.userPaneItems}>
                                 {this.props.user.name}
                             </H1>
@@ -136,6 +145,10 @@ class ProfileComponent extends Component {
         this.props.navigation.navigate(navigator, {}, NavigationActions.navigate({
             routeName: route
         }));
+    }
+    logout(){
+        this.props.saveUser({name: '', phoneNumber: ''})
+        this.navigateNested('Auth', 'Login')
     }
 }
 const mapStateToProps = ({user}) =>{

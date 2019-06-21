@@ -4,7 +4,7 @@ export const saveUser = user => ({
 });
 
 export const saveAdmin = user => ({
-    type: 'SAVE_USER',
+    type: 'SAVE_ADMIN',
     payload: user
 });
 

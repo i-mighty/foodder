@@ -31,7 +31,7 @@ const datas = [
         description: 'whqweuihq0ohfqhfqofhofqjdfolqkndosdvjwovmwopfiwlekvnwlf  w wfwkfwoojgkwkpfgoijwkefwpfjowfwpogfwnfwpfjwfpwgjwfwpofljwpfowejlf wpfwjjefwpgfwjftwmeofjwpefoofjjop'
     }
 ];
-class HomeView extends Component {
+class RestaurantList extends Component {
     constructor(props) {
         super(props);
         this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -45,7 +45,11 @@ class HomeView extends Component {
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        await this.updateResList();
+    }
+
+    async updateResList(){
         var s = this.state;
         var resList = [];
         var resIdList = [];
@@ -65,36 +69,60 @@ class HomeView extends Component {
 
     _listViewOffset = 0;
 
-    deleteItem(secId, rowId, rowMap) {
-        /*DONE: Delete from DB and update the list*/
-        rowMap[`${secId}${rowId}`].props.closeRow();
-        const newData = [...this.state.menuListData];
-        newData.splice(rowId, 1);
-        this.setState({
-            menuListData: newData
-        });
+    async deleteItem(secId, rowId, rowMap) {
+        try {
+            await fs.collection('restaurants').doc(this.state.resIdList[rowId]).delete();
+            /*DONE: Delete from DB and update the list*/
+            rowMap[`${secId}${rowId}`].props.closeRow();
+            const newData = [...this.state.menuListData];
+            newData.splice(rowId, 1);
+            this.setState({
+                resList: newData
+            });
+            await this.updateResList();
+            Toast.show({
+                text: 'Restaurant deleted successfully.'
+            })
+        } catch (err) {
+            Toast.show({
+                type: 'danger',
+                text: 'Could not delete the restaurant.\nPlease check your network connection.'
+            })
+        }
     }
 
     editItem(secId, rowId, rowMap){
-
+        Toast.show({
+            text: 'This is service is currently not available',
+            duration: 7000
+        })
     }
 
     switchItemAvailable(secId, rowId, rowMap) {
         //TODO:  Update db: Switch on success or just chill on failure
 
-        alert(rowId)
-        var arr = this.state.menuListData;
+        var arr = this.state.resList;
         var item = arr[rowId];
         var oldValue = item.open;
-        item['open'] = !oldValue;
-        arr[rowId] = item;
-        this.setState({
-            menuListData: arr
-        });
+
+        fs.collection("restaurants").doc(this.state.resIdList[rowId]).update({open: !oldValue}).then(res => {
+            item['open'] = !oldValue;
+            arr[rowId] = item;
+            this.setState({
+                resList: arr
+            });
+        }).catch(err => {
+            Toast.show({
+                type: 'danger', 
+                text: 'Could not update your restaurant.'
+            })
+        })
     }
 
     navigate(route, params){
-        this.props.navigation.navigate(route, params);
+        params===undefined?
+        this.props.navigation.navigate(route):
+        this.props.navigation.navigate(route, params)
     }
 
     navigateNested(navigator, route){
@@ -197,5 +225,5 @@ const mapDispatchToProps = dispatch => (
         saveAdmin
     }, dispatch)
 );
-const view = withNavigationFocus(HomeView)
+const view = withNavigationFocus(RestaurantList)
 export default connect(mapStateToProps, mapDispatchToProps)(view);

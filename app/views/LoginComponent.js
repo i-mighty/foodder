@@ -14,6 +14,8 @@ import Firebase from 'react-native-firebase';
 import Dialog from "react-native-dialog";
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'react-native-firebase';
+import * as Animated from 'react-native-animatable';
+import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 
 const auth = Firebase.auth();
 const db = Firebase.database();
@@ -53,9 +55,14 @@ class LoginView extends Component {
         return (
             <Content>
                 <ImageBackground source={require('../assets/loginBG.png')} style={styles.bgImage}>
-                    <Header style={styles.header} androidStatusBarColor={'#fff'} transparent>
-
-                    </Header>
+                    <Header style={styles.header} androidStatusBarColor={'#fff'} transparent/>
+                    <Animated.Image 
+                        animation='fadeInUpBig'
+                        source={require('../assets/logo.png')} 
+                        style={{
+                            borderRadius: 50, width: 100, height: 100
+                        }}
+                    />
                 </ImageBackground>
                 <Form style={styles.form}>
                     <Item regular style={styles.input}>
@@ -179,9 +186,11 @@ class LoginView extends Component {
         var val;
         if (!this.props.user.name === '' && !this.state.phoneNumber === '') {
             val = {
-                name: this.state.name,
-                phoneNumber: this.state.fixedNo,
-                uid: auth.currentUser.uid
+              name: this.state.name,
+              phoneNumber: this.state.fixedNo,
+              uid: auth.currentUser.uid,
+              avatar:
+                "https://firebasestorage.googleapis.com/v0/b/foodder-sys.appspot.com/o/users%2Fblank-profile-picture-973460_1280.png?alt=media&token=e693c46f-f106-4be6-885d-f6c7edb7e265"
             };
         } else {
             val = this.props.user;

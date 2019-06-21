@@ -12,9 +12,13 @@ import firebase from 'react-native-firebase';
 import { ProgressDialog } from 'react-native-simple-dialogs';
 import update from 'immutability-helper';
 import Tags from "react-native-tags";
-import AnimatedComponent from '../AnimatedComponent';
+import AnimatedComponent from './AnimatedComponent';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Avatar } from 'react-native-elements';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { saveUser } from "../data/Actions";
+import { withNavigationFocus } from "react-navigation";
 
 AnimatableContainer = Animatable.createAnimatableComponent(Container);
 
@@ -34,7 +38,6 @@ class EditProfile extends Component {
             errorText: '',
             error: null,
             userId: this.props.navigation.getParam('userId', ''),
-            resId: this.props.navigation.getParam('resId', '')
         };
     }
 
@@ -87,14 +90,14 @@ class EditProfile extends Component {
                             <Avatar
                                 title='AV'
                                 containerStyle={styles.formItem}
-                                source={{}}
+                                source={{uri: this.props.user.avatar}}
                                 showEditButton
                                 onEditPress={() => this.newUpload()}
                             />
                         )
                     }
                     <Item regular style={[styles.formItem, {borderColor: platform.brandPrimary}]}>
-                        <Input placeholder='Name'/>
+                        <Input placeholder='Name' onChangeText={(name) => this.setState({name})} />
                     </Item>
                     <Button success block style={styles.formItem} onPress={() => this.verify()}>
                         <Text>
@@ -138,7 +141,8 @@ class EditProfile extends Component {
             that.setState({progressText: 'Uploading image...'})
             storage.ref('users/'+this.state.userId+'/avatar').putFile(s.imgSrc.path).then(file => {
                 fs.collection('users').doc(s.userId).update({
-                    avatar: file.downloadURL
+                    avatar: file.downloadURL,
+                    name: this.state.name
                 }).then(() =>{
                     this.uploadSuccess
                 })
@@ -172,5 +176,14 @@ class EditProfile extends Component {
         this.props.navigation.goBack()
     }
 }
+const mapStateToProps = ({user}) =>{
+    return {user}
+};
+const mapDispatchToProps = dispatch => (
+    bindActionCreators({
+        saveUser
+    }, dispatch)
+);
 
-export default EditProfile;
+const view = withNavigationFocus(EditProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(view)

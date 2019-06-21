@@ -150,6 +150,7 @@ class SearchComponent extends Component {
         var place = [];
         var results = {... this.state.results};
         var items = [];
+        
         var rQuery1 = fs.collection('restaurants').where("name", "==", s.searchText);
         var rQuery2 = fs.collection('restaurants').where("tags", "array-contains", s.searchText);
         var iQuery1 = fs.collection('items').where("name", "==", s.searchText)

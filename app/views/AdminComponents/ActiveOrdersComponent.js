@@ -60,21 +60,37 @@ class ActiveOrdersComponent extends Component {
         })
     }
 
-    deleteRow(secId, rowId, rowMap) {
-        //remote upload
-        rowMap[`${secId}${rowId}`].props.closeRow();
-        const newData = [...this.state.listViewData];
-        newData.splice(rowId, 1);
-        this.setState({
-            listViewData: newData
-        });
+    async deleteRow(rowId) {
+        try {
+            //remote upload
+            await fs.collection('orders').doc(this.state.ordersId[rowId]).delete();
+            rowMap[`${secId}${rowId}`].props.closeRow();
+            const newData = [...this.state.listViewData];
+            newData.splice(rowId, 1);
+            this.setState({
+                listViewData: newData
+            });
+            Toast.show({
+                text: 'Order deleted successfully'
+            })
+        } catch (err) {
+            Toast.show({
+                type: 'danger', 
+                text: 'Could not delete the order\nPlease check your internet connection.'
+            })
+        }
     }
 
     confirmDispatch(id){
         fs.collection('orders').doc(this.state.ordersId[id]).update({dispatch: true}).then(res =>{
-
+            Toast.show({
+                text: 'Order dispatched.'
+            })
         }).catch(err =>{
-
+            Toast.show({
+                type: 'danger',
+                text: 'Could not dispatch the order\nPlease check your internet connection.'
+            })
         })
     }
 
@@ -122,7 +138,7 @@ class ActiveOrdersComponent extends Component {
                                         </Button>
                                     }
                                     renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-                                        <Button full danger onPress={ () => this.deleteRow(secId, rowId, rowMap)}>
+                                        <Button full danger onPress={ () => this.deleteRow(rowId)}>
                                             <Icon active name="close" />
                                         </Button>
                                     }

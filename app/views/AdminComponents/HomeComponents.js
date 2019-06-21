@@ -63,30 +63,53 @@ class HomeView extends Component {
 
     _listViewOffset = 0;
 
-    deleteItem(secId, rowId, rowMap) {
-        /*DONE: Delete from DB and update the list*/
-        rowMap[`${secId}${rowId}`].props.closeRow();
-        const newData = [...this.state.menuListData];
-        newData.splice(rowId, 1);
-        this.setState({
-            menuListData: newData
-        });
+    editItem(secId, rowId, rowMap){
+        Toast.show({
+            text: 'This service is not currently available', 
+            duration: 7000
+        })
     }
 
-    switchItemAvailable(secId, rowId, rowMap){
+    async deleteItem(secId, rowId, rowMap) {
+        try {
+            /*DONE: Delete from DB and update the list*/
+            await fs.collection('items').doc(this.state.menuIdData[rowId]).delete();
+            rowMap[`${secId}${rowId}`].props.closeRow();
+            const newData = [...this.state.menuListData];
+            newData.splice(rowId, 1);
+            this.setState({
+                menuListData: newData
+            });
+            Toast.show({
+                text: 'Item deleted successfully'
+            })
+        } catch (err) {
+            Toast.show({
+                text: 'Could not delete your item\nPlease check your internet connection.'
+            })
+        }
+    }
+
+    switchItemAvailable(secId, rowId, rowMap) {
         //TODO:  Update db: Switch on success or just chill on failure
-        
-        alert(rowId)
+
         var arr = this.state.menuListData;
         var item = arr[rowId];
         var oldValue = item.available;
-        item['available'] = !oldValue;
-        arr[rowId] = item;
-        this.setState({
-            menuListData: arr
-        });
-    }
 
+        fs.collection("items").doc(this.state.menuIdData[rowId]).update({available: !oldValue}).then(res => {
+            item['available'] = !oldValue;
+            arr[rowId] = item;
+            this.setState({
+                menuListData: arr
+            });
+        }).catch(err => {
+            Toast.show({
+                type: 'danger', 
+                text: 'Could not update your restaurant.'
+            })
+        })
+    }
     navigate(route, params){
         this.props.navigation.navigate(route, params);
     }
@@ -172,13 +195,13 @@ class HomeView extends Component {
                                             </Right>
                                         </ListItem>
                                     }
-                                    renderLeftHiddenRow={data =>
-                                        <Button full info onPress={() => alert(data)}>
+                                    renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
+                                        <Button full info onPress={() => this.editItem(secId, rowId, rowMap)}>
                                             <Icon active name="edit" type='Entypo' />
                                         </Button>
                                     }
                                     renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-                                        <Button full danger onPress={_ => this.deleteItem(secId, rowId, rowMap)}>
+                                        <Button full danger onPress={() => this.deleteItem(secId, rowId, rowMap)}>
                                             <Icon active name="trash" />
                                         </Button>
                                     }

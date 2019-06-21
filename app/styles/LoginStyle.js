@@ -9,7 +9,9 @@ export default StyleSheet.create({
     },
     bgImage:{
         height: hp('60%'),
-        width: wp('100%')
+        width: wp('100%'),
+        justifyContent: 'center', 
+        alignItems: 'center',
     },
     form:{
         justifyContent: 'center',
