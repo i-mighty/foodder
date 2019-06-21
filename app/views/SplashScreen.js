@@ -16,6 +16,8 @@ class SplashScreen extends Component {
         setTimeout(() => {
             if (this.props.user.name !== '') {
                 this.props.navigation.navigate("App");
+            }else if (this.props.admin.name !==) {
+                this.props.navigation.navigate("Admin");
             } else {
                 this.props.navigation.navigate("Auth");
             }
@@ -25,7 +27,7 @@ class SplashScreen extends Component {
     
     render() {
         return (
-            <AnimatedContainer animation="fadeIn">
+            <AnimatedContainer animation="fadeIn" duration={1000}>
                 <View 
                     style={{
                         width: widthPercentageToDP('100%'), height: heightPercentageToDP('100%'), backgroundColor: '#54A254',
@@ -43,7 +45,7 @@ class SplashScreen extends Component {
         // return <Text>Hello</Text>
     }
 }
-const mapStateToProps = ({user}) =>{
-    return {user}
+const mapStateToProps = ({user, admin}) =>{
+    return {user, admin}
 }
 export default connect(mapStateToProps)(SplashScreen)

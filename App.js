@@ -287,7 +287,7 @@ const RootStack = createSwitchNavigator({
         screen: SplashScreen
     }
 }, {
-    initialRouteName: 'App'
+    initialRouteName: 'Splash'
 });
 
 const AppContainer = createAppContainer(RootStack);
